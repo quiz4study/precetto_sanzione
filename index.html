@@ -15,16 +15,16 @@
         .segment {
             cursor: grab; /* Indica che l'elemento è trascinabile */
             transition: all 0.2s ease-in-out;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 1.125rem;
+            padding: 10px 16px; /* Aumentato il padding per maggiore leggibilità */
+            border-radius: 12px;
+            font-size: 1.25rem; /* Testo più grande */
             line-height: 1.75rem;
             border: 2px solid transparent;
             display: block;
-            margin: 10px auto; /* Centra */
-            max-width: 90%;
+            margin: 12px auto; /* Centra */
+            max-width: 95%;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 6px 10px -2px rgba(0, 0, 0, 0.1), 0 3px 6px -3px rgba(0, 0, 0, 0.08); /* Ombra più pronunciata */
         }
         .segment-default {
             background-color: #eef2ff; /* indigo-50 */
@@ -33,13 +33,6 @@
         .segment-default:hover {
             background-color: #e0e7ff; /* indigo-100 */
         }
-        .segment-correct {
-            /* Questo stile non è usato direttamente per i segmenti che scompaiono, ma serve per coerenza */
-            background-color: #10b981; 
-            color: white;
-            border-color: #059669;
-            cursor: default;
-        }
         .segment-error {
             background-color: #ef4444; 
             color: white;
@@ -47,11 +40,12 @@
             cursor: default;
         }
         .drop-target {
-            min-height: 80px; /* Assicura un'area di rilascio sufficiente */
+            min-height: 90px; /* Assicura un'area di rilascio sufficiente */
             display: flex;
             align-items: center;
             justify-content: center;
             border: 4px dashed transparent;
+            font-size: 1.5rem; /* Testo dei bottoni più grande */
         }
         .target-ready {
             border-color: #93c5fd; /* blue-300 */
@@ -72,47 +66,37 @@
         <h1 class="text-3xl font-extrabold text-center text-indigo-700 mb-6 border-b pb-3">
             Precetto vs. Sanzione
         </h1>
-        <p class="text-center text-gray-600 mb-8 font-medium">
-            **Trascina** ogni parte di frase sul bottone corretto (Precetto o Sanzione). L'ordine delle parti nella frase completa è variabile.
+        <p class="text-center text-gray-600 mb-8 font-medium text-lg">
+            **Trascina** ogni segmento sulla categoria corretta.
+            <span class="block text-sm mt-1 text-gray-500 italic">I segmenti sono mostrati nell'ordine corretto della norma.</span>
         </p>
         
 
-        <!-- Area della Frase Completa (Da nascondere alla fine) -->
-        <div id="sentence-area" class="transition-opacity duration-500">
-            <div class="bg-indigo-50/50 p-4 rounded-lg mb-6 shadow-inner">
-                <p class="text-lg font-medium text-gray-700 text-center">Frase completa:</p>
-                <div id="sentence-display" class="mt-2 text-xl font-semibold text-gray-900 text-center">
-                    Caricamento...
-                </div>
-            </div>
+        <!-- Area dei Segmenti DRAGGABILI -->
+        <div id="segments-area" class="space-y-4 mb-8 min-h-[220px] flex flex-col items-center justify-center pt-4">
+            <!-- I segmenti sono mostrati nell'ordine in cui compaiono nella frase -->
+            <span id="segment1" class="segment segment-default" draggable="true" ondragstart="drag(event)"></span>
+            <span id="segment2" class="segment segment-default" draggable="true" ondragstart="drag(event)"></span>
+        </div>
     
-            <!-- Area dei Segmenti DRAGGABILI -->
-            <div id="segments-area" class="space-y-4 mb-6 min-h-[140px] flex flex-col items-center justify-center">
-                <p class="text-lg font-medium text-gray-700 mb-2">Trascina le due parti:</p>
-                <!-- Aggiunto draggable="true" e ondragstart -->
-                <span id="segment1" class="segment segment-default" draggable="true" ondragstart="drag(event)"></span>
-                <span id="segment2" class="segment segment-default" draggable="true" ondragstart="drag(event)"></span>
-            </div>
-    
-            <!-- Area di Scelta del Tipo (DROP TARGETS) -->
-            <div id="type-selection" class="flex flex-col space-y-4 pt-4 border-t">
-                <!-- Aggiunto ondragover, ondragleave e ondrop -->
-                <button id="precetto-btn"
-                        class="type-btn drop-target bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-150 ease-in-out transform"
-                        ondragover="allowDrop(event, 'precetto')" ondragleave="dragLeave(event)" ondrop="drop(event, 'precetto')">
-                    PRECETTO
-                </button>
-                <button id="sanzione-btn"
-                        class="type-btn drop-target bg-yellow-500 text-gray-800 font-bold py-3 px-6 rounded-lg shadow-md transition duration-150 ease-in-out transform"
-                        ondragover="allowDrop(event, 'sanzione')" ondragleave="dragLeave(event)" ondrop="drop(event, 'sanzione')">
-                    SANZIONE
-                </button>
-            </div>
+        <!-- Area di Scelta del Tipo (DROP TARGETS) -->
+        <div id="type-selection" class="flex flex-col space-y-4 pt-4 border-t">
+            <!-- Aggiunto ondragover, ondragleave e ondrop -->
+            <button id="precetto-btn"
+                    class="type-btn drop-target bg-blue-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition duration-150 ease-in-out transform hover:scale-[1.01]"
+                    ondragover="allowDrop(event, 'precetto')" ondragleave="dragLeave(event)" ondrop="drop(event, 'precetto')">
+                PRECETTO (L'azione/Dovere)
+            </button>
+            <button id="sanzione-btn"
+                    class="type-btn drop-target bg-yellow-500 text-gray-800 font-bold py-4 px-6 rounded-xl shadow-lg transition duration-150 ease-in-out transform hover:scale-[1.01]"
+                    ondragover="allowDrop(event, 'sanzione')" ondragleave="dragLeave(event)" ondrop="drop(event, 'sanzione')">
+                SANZIONE (La Conseguenza)
+            </button>
         </div>
 
 
         <!-- Messaggio di Feedback -->
-        <div id="feedback-message" class="text-center text-lg font-bold mt-6 min-h-[30px]"></div>
+        <div id="feedback-message" class="text-center text-xl font-bold mt-8 min-h-[30px]"></div>
 
         <!-- Area del Punteggio e Progresso -->
         <div class="mt-8 pt-4 border-t flex justify-between items-center text-gray-700">
@@ -207,8 +191,6 @@
         const totalSentences = sentences.length;
 
         // Elementi DOM
-        const sentenceArea = document.getElementById('sentence-area');
-        const sentenceDisplay = document.getElementById('sentence-display');
         const segment1Element = document.getElementById('segment1');
         const segment2Element = document.getElementById('segment2');
         const precettoBtn = document.getElementById('precetto-btn');
@@ -223,29 +205,7 @@
         // Stato interno della frase corrente
         let currentSegments = []; // [ {text, type, id, element} ]
         let currentSentenceState = { precettoAssigned: false, sanzioneAssigned: false };
-        let errorOccurredInSentence = false; // VARIABILE PER TRACCIARE GLI ERRORI
-
-        // Funzione per mescolare l'ordine dei segmenti
-        function shuffleSegments(array) {
-            let segments = [
-                { text: array.precetto, type: 'precetto', id: 1, element: segment1Element },
-                { text: array.sanzione, type: 'sanzione', id: 2, element: segment2Element }
-            ];
-            
-            // Mescolo l'ordine solo per l'assegnazione iniziale a segment1/segment2
-            const order = [0, 1];
-            if (Math.random() > 0.5) order.reverse();
-
-            // Mappa i testi agli elementi DOM
-            segment1Element.textContent = segments[order[0]].text;
-            segment2Element.textContent = segments[order[1]].text;
-            
-            // Aggiorna gli ID interni per corrispondere all'elemento DOM
-            segments[order[0]].id = 1;
-            segments[order[1]].id = 2;
-
-            return segments;
-        }
+        let errorOccurredInSentence = false; 
 
         // --- Gestione Drag & Drop ---
 
@@ -262,7 +222,6 @@
             ev.preventDefault();
             const targetButton = document.getElementById(`${targetType}-btn`);
             
-            // Aggiunge feedback visivo solo se il target non è stato ancora assegnato
             if (!currentSentenceState[targetType + 'Assigned']) {
                  targetButton.classList.add('ring-4', 'ring-indigo-300');
             }
@@ -285,7 +244,7 @@
             segmentElement.classList.remove('opacity-50');
             targetButton.classList.remove('ring-4', 'ring-indigo-300');
             
-            // Logica di controllo per la singola assegnazione
+            // Trova i dati corretti per il segmento trascinato (ID 1 o 2)
             const segmentData = currentSegments.find(s => s.id === segmentId);
             const correctType = segmentData.type; 
             const isCorrect = assignedType === correctType;
@@ -295,7 +254,6 @@
                  feedbackMessage.textContent = `Hai già assegnato la categoria ${assignedType.toUpperCase()}.`;
                  feedbackMessage.classList.remove('text-green-600');
                  feedbackMessage.classList.add('text-red-600');
-                 // Il segmento ritorna al suo posto
                  return;
             }
 
@@ -305,7 +263,7 @@
                 segmentElement.style.display = 'none'; // Nasconde il segmento
 
                 // Aggiorna il bottone per mostrare che è completo
-                targetButton.classList.remove('bg-blue-500', 'bg-yellow-500');
+                targetButton.classList.remove('bg-blue-500', 'bg-yellow-500', 'text-gray-800', 'text-white');
                 targetButton.classList.add('target-filled');
                 targetButton.textContent = `${assignedType.toUpperCase()} ASSEGNATO`;
 
@@ -355,8 +313,7 @@
 
         // Gestisce la transizione alla frase successiva
         function nextSentence() {
-            // Nasconde l'area della frase e dei bottoni
-            sentenceArea.classList.add('opacity-0');
+            document.getElementById('segments-area').classList.add('opacity-0');
             
             setTimeout(() => {
                 currentSentenceIndex++;
@@ -364,13 +321,12 @@
                     showResults();
                 } else {
                     loadSentence();
-                    // Riappare l'area della frase
-                    sentenceArea.classList.remove('opacity-0');
+                    document.getElementById('segments-area').classList.remove('opacity-0');
                 }
             }, 500);
         }
 
-        // Funzione per caricare la prossima frase
+        // Funzione per caricare la prossima frase (con ordine fisso)
         function loadSentence() {
             if (currentSentenceIndex >= totalSentences) {
                 showResults();
@@ -378,14 +334,30 @@
             }
 
             const currentSentenceData = sentences[currentSentenceIndex];
-            currentSentenceState = { precettoAssigned: false, sanzioneAssigned: false }; // Reset stato
-            errorOccurredInSentence = false; // RESET DELL'ERRORE PER LA NUOVA FRASE
+            currentSentenceState = { precettoAssigned: false, sanzioneAssigned: false };
+            errorOccurredInSentence = false; 
 
-            // Mescola i segmenti e aggiorna il testo sugli elementi DOM
-            currentSegments = shuffleSegments(currentSentenceData);
-            
-            // Aggiorna l'interfaccia principale
-            sentenceDisplay.textContent = currentSentenceData.full;
+            let firstSegmentData;
+            let secondSegmentData;
+
+            // DETERMINAZIONE DELL'ORDINE FISSO: 
+            // La parte che inizia la frase completa (e quindi con la maiuscola) va in segment1.
+            if (currentSentenceData.full.startsWith(currentSentenceData.precetto)) {
+                // Ordine Precetto, Sanzione
+                firstSegmentData = { text: currentSentenceData.precetto, type: 'precetto', id: 1, element: segment1Element };
+                secondSegmentData = { text: currentSentenceData.sanzione, type: 'sanzione', id: 2, element: segment2Element };
+            } else {
+                // Ordine Sanzione, Precetto
+                firstSegmentData = { text: currentSentenceData.sanzione, type: 'sanzione', id: 1, element: segment1Element };
+                secondSegmentData = { text: currentSentenceData.precetto, type: 'precetto', id: 2, element: segment2Element };
+            }
+
+            // Assegna il testo agli elementi DOM
+            segment1Element.textContent = firstSegmentData.text;
+            segment2Element.textContent = secondSegmentData.text;
+
+            // Aggiorna lo stato interno dei segmenti
+            currentSegments = [firstSegmentData, secondSegmentData];
             
             // Resetta lo stato visivo degli elementi
             [segment1Element, segment2Element].forEach(el => {
@@ -398,12 +370,12 @@
             // Resetta i bottoni
             precettoBtn.classList.remove('target-filled', 'bg-yellow-500', 'text-gray-800');
             precettoBtn.classList.add('bg-blue-500', 'text-white');
-            precettoBtn.textContent = 'PRECETTO';
+            precettoBtn.textContent = 'PRECETTO (L\'azione/Dovere)';
             precettoBtn.ondrop = (e) => drop(e, 'precetto');
 
             sanzioneBtn.classList.remove('target-filled', 'bg-blue-500', 'text-white');
             sanzioneBtn.classList.add('bg-yellow-500', 'text-gray-800');
-            sanzioneBtn.textContent = 'SANZIONE';
+            sanzioneBtn.textContent = 'SANZIONE (La Conseguenza)';
             sanzioneBtn.ondrop = (e) => drop(e, 'sanzione');
 
             feedbackMessage.textContent = '';
@@ -448,8 +420,7 @@
             resultsModal.classList.add('hidden');
             resultsModal.classList.remove('flex');
             
-            // Garantisce che l'area sia visibile per iniziare
-            sentenceArea.classList.remove('opacity-0');
+            document.getElementById('segments-area').classList.remove('opacity-0');
             loadSentence();
         }
 
